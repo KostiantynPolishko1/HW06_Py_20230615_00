@@ -3,7 +3,7 @@ import random
 
 sizeA = 10
 arr = []
-x, y = 1, 1  # player  coordinates
+x_player, y_player = 1, 1  # player  coordinates
 x_temp, y_temp = 0, 0 # player temporary coordinates
 x2, y2 = 0, 0  # enemies coordinates
 enemy_num = 1
@@ -23,12 +23,18 @@ for i in range(sizeA):
                 temp.append(" ")
     arr.append(temp)
 
+arr[x_player][y_player] = '@'
+
 print("\ngame \"Snake\"")
 print("\nmatrix size {} x {}".format(sizeA, sizeA))
 
 while True:
 
-    arr[x][y] = '@'
+    # Refill data of matrix
+    for i in range(sizeA):
+        for j in range(sizeA):
+            if arr[i][j] != '@' and arr[i][j] != '*':
+                arr[i][j] = " "
 
     while True:
         x2 = random.randrange(1, 8)
@@ -65,19 +71,22 @@ while True:
             print("\tGAME OVER!")
             break
 
-        x_temp = x
-        y_temp = y
+        x_temp = x_player
+        y_temp = y_player
 
         y = abs(int(input("\t\tenter pos x: ")))
         x = abs(int(input("\t\tenter pos y: ")))
         x -= 1
         y -= 1
 
-        if x > 9 or y > 9 or arr[x][y] == '*':
+        if x > 9 or y > 9 or arr[x][y] == '*' or arr[x][y] == 'o':
             move_num -= 1
             print("\n\tenter pos x.y correctly")
             continue
         elif x == x_temp or y == y_temp:
+            x_player = x
+            y_player = y
+
             move_num -= 1
             arr[x_temp][y_temp] = 'o'
 
