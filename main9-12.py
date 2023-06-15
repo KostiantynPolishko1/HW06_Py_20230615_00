@@ -59,7 +59,7 @@ while True:
                 print(arr[i][j], end='  ')
             print()
         print("\nRemain move qty:\t", move_num)
-        print("Player, move -> ")
+        print("Player, move in orthogonal -> ")
 
         if move_num == 0:
             print("\tGAME OVER!")
@@ -70,19 +70,29 @@ while True:
 
         y = abs(int(input("\t\tenter pos x: ")))
         x = abs(int(input("\t\tenter pos y: ")))
+        x -= 1
+        y -= 1
 
-        if x > 10 or y > 10 or arr[x-1][y-1] == '*':
+        if x > 9 or y > 9 or arr[x][y] == '*':
             move_num -= 1
             print("\n\tenter pos x.y correctly")
             continue
-        else:
+        elif x == x_temp or y == y_temp:
             move_num -= 1
-            arr[x_temp][y_temp] = ' '
-            x -= 1
-            y -= 1
+            arr[x_temp][y_temp] = 'o'
+
+            for i2 in range(x_temp, x, (1 if x_temp < x else -1)):
+                arr[i2][y] = 'o'
+            for j2 in range(y_temp, y, (1 if y_temp < y else -1)):
+                arr[x][j2] = 'o'
+
             if arr[x][y] != '+':
                 arr[x][y] = '@'
                 continue
             else:
                 arr[x][y] = '@'
                 break
+        else:
+            move_num -= 1
+            print("\n\tenter pos x.y correctly")
+            continue
