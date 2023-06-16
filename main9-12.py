@@ -8,7 +8,7 @@ x_temp, y_temp = 0, 0  # player temporary coordinates
 x2, y2 = 0, 0  # enemies coordinates
 enemy_num, move_num, count, level = 0, 0, 0, 0
 ind_move_y, ind_move_n, ind_enemy_done = 0, 0, 0  # counter of moves correct & not correct, enemy done
-level_lim = 2
+level_lim = 5
 logic = False
 
 # Fill data of matrix
@@ -32,6 +32,10 @@ print("\nmatrix size {} x {}".format(sizeA, sizeA))
 
 while level < level_lim:
 
+    arr_enemy = []
+    ind_arr_enemy = 0
+    logic2 = True
+
     if logic:
         print("\tGAME OVER!")
         break
@@ -45,15 +49,30 @@ while level < level_lim:
     level += 1
     enemy_num += 1
     count += enemy_num
-    for i in range(enemy_num):
+    for i in range(enemy_num):  # logic to fill data by random enemy "+"
         while True:
-            x2 = random.randrange(1, 8)
+            arr_temp = []
             y2 = random.randrange(1, 8)
-            if arr[x2][y2] == '@' or arr[x2][y2] == '+':
+            arr_temp.append(y2)
+            x2 = random.randrange(1, 8)
+            arr_temp.append(x2)
+            if arr[y2][x2] == '@' or arr[y2][x2] == '+':
+                continue
+            elif y2 == y_player or x2 == x_player:
                 continue
             else:
+                for k in range(ind_arr_enemy):
+                    if y2 == arr_enemy[k][0] or x2 == arr_enemy[k][1]:
+                        logic2 = False
+                        break
+            if logic2:
                 arr[x2][y2] = '+'
+                arr_enemy.append(arr_temp)
+                ind_arr_enemy += 1
                 break
+            else:
+                logic2 = True
+                continue
 
     move_num += 5
     print("Data:")
