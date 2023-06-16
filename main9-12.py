@@ -6,9 +6,9 @@ arr = []
 x_player, y_player = 1, 1  # player  coordinates
 x_temp, y_temp = 0, 0  # player temporary coordinates
 x2, y2 = 0, 0  # enemies coordinates
-enemy_num, move_num, count, level = 0, 0, 0, 0
+enemy_num, level = 0, 0
 ind_move_y, ind_move_n, ind_enemy_done = 0, 0, 0  # counter of moves correct & not correct, enemy done
-level_lim = 5
+level_lim, move_num = 5, 5
 logic = False
 
 # Fill data of matrix
@@ -35,6 +35,7 @@ while level < level_lim:
     arr_enemy = []
     ind_arr_enemy = 0
     logic2 = True
+    count = 0
 
     if logic:
         print("\tGAME OVER!")
@@ -74,25 +75,31 @@ while level < level_lim:
                 logic2 = True
                 continue
 
-    move_num += 5
     print("Data:")
     print("\tGame level:\t", level)
-    print("\tEnemy qty:\t", enemy_num)
+    print("\tEnemy qty:\t", enemy_num, "\n")
 
     while count != 0:
 
         # Print data of matrix
         for i in range(sizeA):
             if i == 0:
-                print("\n\t", end='')
-                for n in range(sizeA):
-                    print(n + 1, end='  ')
-                print()
-
-            print(i + 1, end='\t')
+                print(" ", end='\t')
+            elif i == sizeA-1:
+                print("(Y)", end='\t')
+            else:
+                print((sizeA-1)-i, end='\t')
             for j in range(sizeA):
                 print(arr[i][j], end='  ')
             print()
+            if i == sizeA - 1:
+                print("   ", end='')
+                for n in range(sizeA-1):
+                    if n == 0:
+                        print("(X) ", end='')
+                    else:
+                        print(n, end='  ')
+                print()
 
         print("\nRemain move qty:\t", move_num)
 
@@ -105,10 +112,13 @@ while level < level_lim:
         x_temp = x_player
         y_temp = y_player
 
-        y = abs(int(input("\t\tenter pos x: ")))
-        x = abs(int(input("\t\tenter pos y: ")))
-        x -= 1
-        y -= 1
+        y = abs(float(input("\t\tenter pos x: ")))
+        x = abs(float(input("\t\tenter pos y: ")))
+        print()
+        x = int(x)
+        y = int(y)
+        x = (sizeA-1)-x
+        #y -= 1
 
         if x > 9 or y > 9 or arr[x][y] == '*' or arr[x][y] == 'o':
             print("\n\tenter pos x.y correctly")
@@ -132,7 +142,8 @@ while level < level_lim:
                 ind_move_y += 1
                 continue
             else:
-                arr[x][y] = '@'
+                arr[x][y] = '@'  # enemy done
+                move_num += 5
                 ind_enemy_done += 1
                 ind_move_y += 1
                 count -= 1
@@ -149,17 +160,25 @@ else:
                 arr[i][j] = " "
 
     # Print data of matrix
+    print()
     for i in range(sizeA):
         if i == 0:
-            print("\n\t", end='')
-            for n in range(sizeA):
-                print(n + 1, end='  ')
-            print()
-
-        print(i + 1, end='\t')
+            print(" ", end='\t')
+        elif i == sizeA - 1:
+            print("(Y)", end='\t')
+        else:
+            print((sizeA - 1) - i, end='\t')
         for j in range(sizeA):
             print(arr[i][j], end='  ')
         print()
+        if i == sizeA - 1:
+            print("   ", end='')
+            for n in range(sizeA - 1):
+                if n == 0:
+                    print("(X) ", end='')
+                else:
+                    print(n, end='  ')
+            print()
 
     print("\n\tYOU WIN! END of GAME")
     print("\n\tData of report:")
