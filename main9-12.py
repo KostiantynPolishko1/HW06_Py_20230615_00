@@ -4,10 +4,12 @@ import random
 sizeA = 10
 arr = []
 x_player, y_player = 1, 1  # player  coordinates
-x_temp, y_temp = 0, 0 # player temporary coordinates
+x_temp, y_temp = 0, 0  # player temporary coordinates
 x2, y2 = 0, 0  # enemies coordinates
-enemy_num = 1
-level = 1
+enemy_num, move_num, count, level = 0, 0, 0, 0
+ind_move_y, ind_move_n, ind_enemy_done = 0, 0, 0  # counter of moves correct & not correct, enemy done
+level_lim = 2
+logic = False
 
 # Fill data of matrix
 for i in range(sizeA):
@@ -23,12 +25,16 @@ for i in range(sizeA):
                 temp.append(" ")
     arr.append(temp)
 
-arr[x_player][y_player] = '@'
+arr[x_player][y_player] = '@'  # start position of player
 
 print("\ngame \"Snake\"")
 print("\nmatrix size {} x {}".format(sizeA, sizeA))
 
-while True:
+while level < level_lim:
+
+    if logic:
+        print("\tGAME OVER!")
+        break
 
     # Refill data of matrix
     for i in range(sizeA):
@@ -36,21 +42,25 @@ while True:
             if arr[i][j] != '@' and arr[i][j] != '*':
                 arr[i][j] = " "
 
-    while True:
-        x2 = random.randrange(1, 8)
-        y2 = random.randrange(1, 8)
-        if arr[x2][y2] == '@':
-            continue
-        else:
-            arr[x2][y2] = '+'
-            break
+    level += 1
+    enemy_num += 1
+    count += enemy_num
+    for i in range(enemy_num):
+        while True:
+            x2 = random.randrange(1, 8)
+            y2 = random.randrange(1, 8)
+            if arr[x2][y2] == '@' or arr[x2][y2] == '+':
+                continue
+            else:
+                arr[x2][y2] = '+'
+                break
 
-    move_num = 5
+    move_num += 5
     print("Data:")
     print("\tGame level:\t", level)
     print("\tEnemy qty:\t", enemy_num)
 
-    while True:
+    while count != 0:
 
         # Print data of matrix
         for i in range(sizeA):
@@ -64,12 +74,14 @@ while True:
             for j in range(sizeA):
                 print(arr[i][j], end='  ')
             print()
+
         print("\nRemain move qty:\t", move_num)
-        print("Player, move in orthogonal -> ")
 
         if move_num == 0:
-            print("\tGAME OVER!")
+            logic = True
             break
+
+        print("Player, move in orthogonal -> ")
 
         x_temp = x_player
         y_temp = y_player
@@ -80,8 +92,9 @@ while True:
         y -= 1
 
         if x > 9 or y > 9 or arr[x][y] == '*' or arr[x][y] == 'o':
-            move_num -= 1
             print("\n\tenter pos x.y correctly")
+            move_num -= 1
+            ind_move_n += 1
             continue
         elif x == x_temp or y == y_temp:
             x_player = x
@@ -97,11 +110,41 @@ while True:
 
             if arr[x][y] != '+':
                 arr[x][y] = '@'
+                ind_move_y += 1
                 continue
             else:
                 arr[x][y] = '@'
-                break
+                ind_enemy_done += 1
+                ind_move_y += 1
+                count -= 1
         else:
-            move_num -= 1
             print("\n\tenter pos x.y correctly")
+            move_num -= 1
+            ind_move_n += 1
             continue
+else:
+    # Refill data of matrix
+    for i in range(sizeA):
+        for j in range(sizeA):
+            if arr[i][j] != '@' and arr[i][j] != '*':
+                arr[i][j] = " "
+
+    # Print data of matrix
+    for i in range(sizeA):
+        if i == 0:
+            print("\n\t", end='')
+            for n in range(sizeA):
+                print(n + 1, end='  ')
+            print()
+
+        print(i + 1, end='\t')
+        for j in range(sizeA):
+            print(arr[i][j], end='  ')
+        print()
+
+    print("\n\tYOU WIN! END of GAME")
+    print("\n\tData of report:")
+    print("\t\tmove qty:")
+    print("\t\t\tcorrect\t= ", ind_move_y)
+    print("\t\t\tuncorrect\t= ", ind_move_n)
+    print("\t\trate of winnings = ", ind_enemy_done)
